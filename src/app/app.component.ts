@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EnderecoService } from './services/endereco.service';
-import { Endereco } from './models/endereco';
+import { Endereco } from './models/Endereco';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -16,9 +16,20 @@ export class AppComponent implements OnInit {
   constructor(private enderecoService: EnderecoService) {}
 
   ngOnInit() {
-    this.getEnderecos();
+this.endereco=new Endereco();
   }
 
+  insertEndereco(form: NgForm) {
+    if (this.endereco.cep !== undefined) {
+      this.enderecoService.saveEndereco(this.endereco).subscribe(() => {
+        this.cleanForm(form);
+      });
+    } else {
+      this.enderecoService.saveEndereco(this.endereco).subscribe(() => {
+        this.cleanForm(form);
+      });
+    }
+  }
 // Chama o serviço para obtém todos os enderecos
   getEnderecos() {
     this.enderecoService.getEnderecos().subscribe((enderecos: Endereco[]) => {
@@ -26,16 +37,16 @@ export class AppComponent implements OnInit {
     });
   }
 
- // copia o endereco para ser editado.
-  editEndereco(endereco: Endereco) {
-    this.endereco = { ...endereco };
+  getEnderecosApi(endereco:Endereco) {
+    this.enderecoService.getEnderecosApi(endereco.cep).subscribe((enderecos: Endereco[]) => {
+      this.enderecos = enderecos;
+    });
   }
 
-  // limpa o formulario
-  cleanForm(form: NgForm) {
+// limpa o formulario
+ cleanForm(form: NgForm) {
     this.getEnderecos();
     form.resetForm();
     this.endereco = {} as Endereco;
   }
-
 }
