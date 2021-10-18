@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CarService } from './services/car.service';
-import { Car } from './models/car';
+import { EnderecoService } from './services/endereco.service';
+import { Endereco } from './models/endereco';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -10,52 +10,32 @@ import { NgForm } from '@angular/forms';
 })
 export class AppComponent implements OnInit {
 
-  car = {} as Car;
-  cars: Car[];
+  endereco = {} as Endereco;
+  enderecos: Endereco[];
 
-  constructor(private carService: CarService) {}
-  
+  constructor(private enderecoService: EnderecoService) {}
+
   ngOnInit() {
-    this.getCars();
+    this.getEnderecos();
   }
 
-  // defini se um carro será criado ou atualizado
-  saveCar(form: NgForm) {
-    if (this.car.id !== undefined) {
-      this.carService.updateCar(this.car).subscribe(() => {
-        this.cleanForm(form);
-      });
-    } else {
-      this.carService.saveCar(this.car).subscribe(() => {
-        this.cleanForm(form);
-      });
-    }
-  }
-
-  // Chama o serviço para obtém todos os carros
-  getCars() {
-    this.carService.getCars().subscribe((cars: Car[]) => {
-      this.cars = cars;
+// Chama o serviço para obtém todos os enderecos
+  getEnderecos() {
+    this.enderecoService.getEnderecos().subscribe((enderecos: Endereco[]) => {
+      this.enderecos = enderecos;
     });
   }
 
-  // deleta um carro
-  deleteCar(car: Car) {
-    this.carService.deleteCar(car).subscribe(() => {
-      this.getCars();
-    });
-  }
-
-  // copia o carro para ser editado.
-  editCar(car: Car) {
-    this.car = { ...car };
+ // copia o endereco para ser editado.
+  editEndereco(endereco: Endereco) {
+    this.endereco = { ...endereco };
   }
 
   // limpa o formulario
   cleanForm(form: NgForm) {
-    this.getCars();
+    this.getEnderecos();
     form.resetForm();
-    this.car = {} as Car;
+    this.endereco = {} as Endereco;
   }
 
 }
